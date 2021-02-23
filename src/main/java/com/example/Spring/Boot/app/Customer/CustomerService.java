@@ -1,8 +1,10 @@
 package com.example.Spring.Boot.app.Customer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -36,5 +38,20 @@ public class CustomerService {
            throw new IllegalStateException(customerId + "Customer doesnt exist!");
        }
        customerRepository.deleteById(customerId);
+    }
+
+
+    public void updateCustomer(Long customerId, String fullName, String email) {
+        Customer customer = customerRepository.findById(customerId)
+                .orElseThrow(() ->new IllegalStateException(
+                        customerId + " customer doesnt exists"
+                ));
+
+        if((fullName != null && fullName.length() > 0 && !Objects.equals(customer.getFullName(), fullName))) {
+            customer.setFullName(fullName);
+        }
+        if((email != null && email.length() > 0 && !Objects.equals(customer.getEmail(), email))) {
+            customer.setEmail(email);
+        }
     }
 }
