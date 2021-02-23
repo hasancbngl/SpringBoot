@@ -1,6 +1,20 @@
 package com.example.Spring.Boot.app.Customer;
 
+import javax.persistence.*;
+
+@Entity
+@Table
 public class Customer {
+    @Id
+    @SequenceGenerator(
+            name = "customer_sequence",
+            sequenceName = "customer_sequence",
+            allocationSize = 1
+    )
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "customer_sequence"
+    )
     private Long id;
     private String fullName;
     private Integer age;
