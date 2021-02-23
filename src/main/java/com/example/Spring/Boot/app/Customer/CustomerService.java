@@ -3,6 +3,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CustomerService {
@@ -18,6 +19,22 @@ public class CustomerService {
     }
 
     public void addNewCustomer(Customer customer) {
-        System.out.println(customer);
+       Optional<Customer> customerByEmail = customerRepository
+               .findCustomerByEmail(customer.getEmail());
+        Optional<Customer> customerByAgeGreaterNotContain =  customerRepository
+                .findCustomerByAgeIsGreaterThanAndFullNameNotContaining(customer.getAge(),"e");
+        if(customerByEmail.isPresent()) {
+            throw new IllegalStateException("email taken");
+        }
+        customerRepository.save(customer);
+    }
+
+    public void deleteCustomer(Long customerId) {
+       boolean exists =  customerRepository.existsById(customerId);
+
+       if(!exists) {
+           throw new IllegalStateException(customerId + "Customer doesnt exist!");
+       }
+       customerRepository.deleteById(customerId);
     }
 }
